@@ -1,8 +1,8 @@
 import sys
-from app import App
+from ui.app import App
 
 if __name__ == "__main__":
-    try :
+    try:
         app = App()
         app.mainloop()
     except KeyboardInterrupt:
