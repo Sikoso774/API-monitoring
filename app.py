@@ -1,9 +1,22 @@
+import os
 import requests
 import customtkinter as ctk
+from dotenv import load_dotenv
+
+# --- Chargement des variables d'environnement ---
+# Cette ligne lit le fichier .env et charge son contenu en mémoire
+load_dotenv()
 
 # --- Configuration de l'API ---
 BASE_URL = "https://kissapi.kissgroup.io/kisslink"
-API_KEY = "019dab34-0a36-74f5-98cc-efe55ee79d21"
+
+# On récupère la clé depuis l'environnement au lieu de l'écrire en dur
+API_KEY = os.getenv("KISSGROUP_API_KEY")
+
+# Sécurité supplémentaire : on bloque le script si le .env est manquant ou vide
+if not API_KEY:
+    raise ValueError("ERREUR CRITIQUE : La clé API 'KISSGROUP_API_KEY' est introuvable. Vérifiez votre fichier .env.")
+
 
 class NoxiaDashboard(ctk.CTk):
     def __init__(self):
