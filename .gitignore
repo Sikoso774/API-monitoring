@@ -10,7 +10,9 @@ env/
 __pycache__/
 *.pyc
 
-# Autres fichiers
-
-logs/
+# tests
 tests/
+
+# Logs
+logs/
+*.log
