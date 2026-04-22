@@ -33,9 +33,7 @@ class MonitoringService:
             "address": mon_data.get("address", ""),
             "lat": mon_data.get("lat"),
             "lng": mon_data.get("lng"),
-            
-            "last_change_connection_date": mon_data.get("last_change_connection_date", "Inconnue"),
-            
+                        
             "ip_publique": first_ppp.get("ip_address", "Non définie"),
             "session_ppp": first_ppp.get("ppp_login", "Aucune"),
             "provider": details.get("provider_name", "Inconnu"),
