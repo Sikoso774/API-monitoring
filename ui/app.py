@@ -11,7 +11,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("NOXIA Seurity - DASHBOARD")
+        self.title("NOXIA Security - DASHBOARD")
         self.configure(fg_color=COLORS["bg"])
         
         # Fenêtre responsive

@@ -1,60 +1,58 @@
 import requests
 import time
 from config.settings import settings
+from config.logger import setup_logger # Import de notre nouveau système
+
+# On initialise le logger pour ce module spécifique
+logger = setup_logger("API_Client")
 
 class API_Client:
     def __init__(self):
         self.base_url = settings.BASE_URL
         self.headers = {"api_key": settings.API_KEY}
+        logger.info("API_Client initialisé avec succès")
 
     def get_links(self):
-        response = requests.get(f"{self.base_url}/links", headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+        try:
+            logger.debug("Tentative de récupération de la liste des liens...")
+            response = requests.get(f"{self.base_url}/links", headers=self.headers)
+            response.raise_for_status()
+            links = response.json()
+            logger.info(f"{len(links)} liens récupérés avec succès")
+            return links
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des liens : {e}")
+            raise
 
     def get_monitoring_data(self):
-        """Récupère la liste complète des statuts de supervision"""
-        response = requests.get(f"{self.base_url}/monitoring", headers=self.headers)
-        response.raise_for_status()
-        return response.json() # On renvoie toute la liste JSON
-
-    # --- NOUVELLES FONCTIONNALITÉS SÉCURISÉES ---
-
-    def get_link_details(self, link_code):
-        """Récupère le détail complet d'un lien en gérant les erreurs 404"""
         try:
-            # Si la doc se trompe, tu pourras tester de remplacer "/links/" par "/link/" ici
-            response = requests.get(f"{self.base_url}/links/{link_code}", headers=self.headers)
+            logger.debug("Appel API : /monitoring")
+            response = requests.get(f"{self.base_url}/monitoring", headers=self.headers)
             response.raise_for_status()
             data = response.json()
-            return data[0] if isinstance(data, list) else data
-            
+            logger.info("Données de monitoring reçues")
+            return data
+        except Exception as e:
+            logger.error(f"Erreur monitoring : {e}")
+            return []
+
+    def get_link_details(self, link_code):
+        try:
+            logger.debug(f"Récupération des détails pour le lien : {link_code}")
+            response = requests.get(f"{self.base_url}/links/{link_code}", headers=self.headers)
+            response.raise_for_status()
+            logger.info(f"Détails récupérés pour {link_code}")
+            return response.json()
         except requests.exceptions.HTTPError as e:
-            print(f"⚠️ Alerte API : Détails introuvables pour {link_code} (Erreur {e.response.status_code})")
-            # On retourne un dictionnaire vide pour protéger l'interface graphique
+            logger.warning(f"Lien {link_code} introuvable (404) ou erreur API")
             return {}
         except Exception as e:
-            print(f"⚠️ Erreur réseau inattendue : {e}")
+            logger.error(f"Erreur réseau sur {link_code} : {e}")
             return {}
 
     def run_diagnostic(self, link_code):
-        """
-        Simulateur de diagnostic réseau.
-        Remplace l'appel API (qui n'existe pas chez Kissgroup) par un faux test réaliste.
-        """
-        try:
-            time.sleep(2) # Simulation de l'attente réseau
-            return {
-                "message": (
-                    "✅ DIAGNOSTIC Mikrotik TERMINÉ\n"
-                    "------------------------------------------\n"
-                    "• Signal Fibre : -18.5 dB (Conforme)\n"
-                    "• Session PPPoE : Active (Status Tech: OK)\n"
-                    "• Routeur : Mikrotik accessible\n"
-                    "------------------------------------------\n"
-                    "Résultat : Aucun défaut détecté sur la ligne."
-                )
-            }
-            
-        except Exception as e:
-            return {"message": f"Erreur de simulation : {e}"}
+        # On garde notre simulateur mais on logge l'action
+        logger.info(f"Démarrage du diagnostic simulé pour {link_code}")
+        time.sleep(2)
+        logger.debug("Simulation de l'analyse des paquets terminée")
+        return {"message": "✅ Diagnostic (Simulé) : Tout est OK."}

@@ -1,13 +1,19 @@
 [project]
 name = "api"
 version = "0.1.0"
-description = "Test"
+description = "GUI for monitoring with CTk"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "customtkinter>=5.2.2",
     "pillow>=12.2.0",
     "pydantic-settings>=2.14.0",
+    "pytest>=9.0.3",
     "requests>=2.33.1",
     "tkintermapview>=1.29",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
 ]
