@@ -2,7 +2,7 @@ import os
 import tkintermapview
 import customtkinter as ctk
 from PIL import Image, ImageTk
-from config.settings import COLORS, ASSETS_DIR
+from config.settings import COLORS, IMG_DIR
 
 class MapView(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -20,7 +20,7 @@ class MapView(ctk.CTkFrame):
 
     def _load_pin(self, filename):
         try:
-            path = os.path.join(ASSETS_DIR, filename)
+            path = os.path.join(IMG_DIR, filename)
             pil_img = Image.open(path)
             # On force une taille de pin standard
             img_resized = pil_img.resize((35, 45), Image.Resampling.LANCZOS)

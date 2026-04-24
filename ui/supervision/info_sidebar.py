@@ -1,14 +1,15 @@
 import customtkinter as ctk
-from config.settings import COLORS
+from config.settings import COLORS, FONTS
 
 class InfoSidebar(ctk.CTkScrollableFrame):
     def __init__(self, master, on_refresh, on_diagnostic, **kwargs):
         super().__init__(master, width=320, fg_color="transparent", **kwargs)
         
         # En-tête Client
-        self.label_client = ctk.CTkLabel(self, text="Sélectionnez un lien", font=("Arial", 16, "bold"), wraplength=280)
+        self.label_client = ctk.CTkLabel(self, text="Sélectionnez un lien", font=FONTS["title"], wraplength=280)
         self.label_client.pack(pady=(10, 5))
-        self.label_address = ctk.CTkLabel(self, text="", font=("Arial", 12), wraplength=280)
+        
+        self.label_address = ctk.CTkLabel(self, text="", font=FONTS["body"], wraplength=280)
         self.label_address.pack(pady=5)
 
         # Carte d'informations techniques
@@ -24,19 +25,35 @@ class InfoSidebar(ctk.CTkScrollableFrame):
         self.label_pass = self._create_label("Pass Admin : -", padding=(2, 10))
 
         # Statut Temps Réel
-        self.label_status = ctk.CTkLabel(self, text="-", font=("Arial", 30, "bold"))
+        self.label_status = ctk.CTkLabel(self, text="-", font=FONTS["status"])
         self.label_status.pack(pady=15)
         
         # Boutons d'action
         ctk.CTkButton(self, text="Rafraîchir Statut", fg_color=COLORS["primary"], command=on_refresh).pack(pady=10)
-        ctk.CTkButton(self, text="LANCER DIAGNOSTIC", fg_color="#8e44ad", hover_color="#732d91", command=on_diagnostic).pack(pady=(15, 5))
         
+        # MODIFICATION 1 : On sauvegarde le bouton pour pouvoir le désactiver plus tard
+        self.btn_diag = ctk.CTkButton(self, text="LANCER DIAGNOSTIC", fg_color="#8e44ad", hover_color="#732d91", command=on_diagnostic)
+        self.btn_diag.pack(pady=(15, 5))
+        
+        # MODIFICATION 2 : Création de la barre de progression (sans faire de .pack() pour qu'elle reste cachée)
+        self.progress_bar = ctk.CTkProgressBar(
+            self, 
+            orientation="horizontal", 
+            mode="indeterminate",
+            progress_color=COLORS["accent"], # Le vert néon de ta charte
+            fg_color=COLORS["card"]          # Le gris de tes cartes
+        )
+        self.progress_bar.set(0)
+
         # Zone de résultat Diagnostic
         self.diag_result = ctk.CTkTextbox(self, height=100, fg_color=COLORS["card"], state="disabled", wrap="word")
         self.diag_result.pack(fill="x", pady=5, padx=5)
 
+    # --- Reste de tes fonctions _create_label, update_display, etc... ---
+        
     def _create_label(self, text, bold=False, color=None, padding=(2, 2)):
-        font = ("Arial", 11, "bold") if bold else ("Arial", 11)
+        # On utilise le dictionnaire de polices ici aussi !
+        font = FONTS["small_bold"] if bold else FONTS["small"]
         lbl = ctk.CTkLabel(self.tech_frame, text=text, font=font, text_color=color, anchor="w")
         lbl.pack(fill="x", padx=10, pady=padding)
         return lbl
@@ -74,3 +91,17 @@ class InfoSidebar(ctk.CTkScrollableFrame):
         self.diag_result.delete("1.0", "end")
         self.diag_result.insert("1.0", text)
         self.diag_result.configure(state="disabled")
+    
+    # MODIFICATION 3 : Ajoute ces deux méthodes tout à la fin de la classe
+    def start_loading(self):
+        """Affiche et anime la barre de progression"""
+        self.btn_diag.configure(state="disabled") # Bloque les clics multiples
+        # On l'affiche juste au-dessus de la zone de résultat
+        self.progress_bar.pack(pady=5, before=self.diag_result) 
+        self.progress_bar.start()
+
+    def stop_loading(self):
+        """Arrête et cache la barre de progression"""
+        self.progress_bar.stop()
+        self.progress_bar.pack_forget()
+        self.btn_diag.configure(state="normal") # Réactive le bouton

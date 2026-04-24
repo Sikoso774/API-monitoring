@@ -45,11 +45,18 @@ class TabSupervision:
     def start_diagnostic_thread(self):
         if not self.current_link_code: return
         self.sidebar.set_diag_text("🔍 Diagnostic en cours...")
+        self.sidebar.start_loading() # MODIFICATION : On allume l'animation
         threading.Thread(target=self._threaded_diag, daemon=True).start()
 
     def _threaded_diag(self):
         result = self.diag.run_full_diagnostic(self.current_link_code)
-        self.parent.after(0, self.sidebar.set_diag_text, result.get("message"))
+        # MODIFICATION : Au lieu d'écrire le texte, on appelle notre nouvelle fonction de finition
+        self.parent.after(0, self._finish_diagnostic_ui, result.get("message"))
+
+    def _finish_diagnostic_ui(self, message):
+        """S'exécute de retour sur le thread principal une fois le calcul terminé"""
+        self.sidebar.stop_loading() # On éteint l'animation
+        self.sidebar.set_diag_text(message) # On affiche le rapport
 
     def auto_refresh_monitoring(self):
         if self.current_link_code: self.refresh_data()
