@@ -82,6 +82,25 @@ class App(ctk.CTk):
         self.tab_supervision = TabSupervision(self.tab_supervision_frame, self.api)
         self.tab_liste = TabListe(self.tab_liste_frame, self.api, self.go_to_monitoring)
 
+        # Retirer le focus (curseur clignotant) si on clique en dehors de la recherche
+        self.bind_all("<Button-1>", self._clear_focus)
+
+    def _clear_focus(self, event: Any) -> None:
+        """Retire le focus des zones de texte si l'utilisateur clique ailleurs.
+
+        Args:
+            event (Any): L'événement Tkinter déclenché par le clic souris.
+        """
+        try:
+            # On vérifie le type du widget sur lequel on vient de cliquer
+            widget_type = type(event.widget).__name__
+            # CustomTkinter utilise sous le capot les widgets standard Tk (ex: 'Entry')
+            if widget_type not in ("CTkEntry", "Entry", "CTkTextbox", "Text"):
+                # Si ce n'est pas une zone de saisie, on force la perte de focus
+                self.focus_set()
+        except Exception:
+            pass
+
     def setup_header(self) -> None:
         """Configure et affiche l'en-tête de l'application avec le logo."""
         self.header_frame = ctk.CTkFrame(self, fg_color="transparent")
