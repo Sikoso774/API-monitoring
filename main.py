@@ -1,3 +1,5 @@
+"""Point d'entrée principal de l'application Noxia Security Dashboard."""
+
 import sys
 from ui.app import App
 

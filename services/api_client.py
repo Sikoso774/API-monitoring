@@ -1,30 +1,63 @@
-import requests
-import time
-from config.settings import settings
-from config.logger import setup_logger # Import de notre nouveau système
+"""Module responsable des communications HTTP avec l'API métier Noxia.
 
-# On initialise le logger pour ce module spécifique
+Ce module encapsule la bibliothèque 'requests' pour fournir des méthodes
+de haut niveau permettant de récupérer les liens, le monitoring et les détails.
+"""
+
+import time
+from typing import Any, Dict, List, Union
+import requests
+
+from config.settings import settings
+from config.logger import setup_logger
+
+# Initialisation du logger pour ce module spécifique
 logger = setup_logger("API_Client")
 
+
 class API_Client:
-    def __init__(self):
-        self.base_url = settings.BASE_URL
-        self.headers = {"api_key": settings.API_KEY}
+    """Client HTTP dédié aux échanges avec l'API Noxia.
+
+    Gère l'authentification via clé d'API et la construction des requêtes GET.
+
+    Attributes:
+        base_url (str): URL racine de l'API (issue des configurations).
+        headers (Dict[str, str]): En-têtes HTTP incluant la clé d'API.
+    """
+
+    def __init__(self) -> None:
+        """Initialise le client API avec les configurations globales."""
+        self.base_url: str = settings.BASE_URL
+        self.headers: Dict[str, str] = {"api_key": settings.API_KEY}
         logger.info("API_Client initialisé avec succès")
 
-    def get_links(self):
+    def get_links(self) -> List[Dict[str, Any]]:
+        """Récupère la liste complète des liens réseau.
+
+        Returns:
+            List[Dict[str, Any]]: Une liste de dictionnaires représentant chaque lien.
+
+        Raises:
+            requests.exceptions.RequestException: En cas d'erreur de requête HTTP.
+        """
         try:
             logger.debug("Tentative de récupération de la liste des liens...")
             response = requests.get(f"{self.base_url}/links", headers=self.headers)
             response.raise_for_status()
-            links = response.json()
+            links: List[Dict[str, Any]] = response.json()
             logger.info(f"{len(links)} liens récupérés avec succès")
             return links
         except Exception as e:
             logger.error(f"Erreur lors de la récupération des liens : {e}")
             raise
 
-    def get_monitoring_data(self):
+    def get_monitoring_data(self) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+        """Récupère les données de supervision (monitoring) pour l'ensemble des liens.
+
+        Returns:
+            Union[List[Dict[str, Any]], Dict[str, Any]]: Les données de supervision reçues, 
+            généralement une liste, ou une liste vide en cas d'erreur.
+        """
         try:
             logger.debug("Appel API : /monitoring")
             response = requests.get(f"{self.base_url}/monitoring", headers=self.headers)
@@ -36,14 +69,23 @@ class API_Client:
             logger.error(f"Erreur monitoring : {e}")
             return []
 
-    def get_link_details(self, link_code):
+    def get_link_details(self, link_code: str) -> Dict[str, Any]:
+        """Récupère les informations techniques détaillées pour un lien spécifique.
+
+        Args:
+            link_code (str): Identifiant unique du lien réseau.
+
+        Returns:
+            Dict[str, Any]: Un dictionnaire contenant les détails techniques.
+            Retourne un dictionnaire vide si le lien est introuvable (404) ou en cas d'erreur.
+        """
         try:
             logger.debug(f"Récupération des détails pour le lien : {link_code}")
             response = requests.get(f"{self.base_url}/links/{link_code}", headers=self.headers)
             response.raise_for_status()
             logger.info(f"Détails récupérés pour {link_code}")
             return response.json()
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError:
             logger.warning(f"Lien {link_code} introuvable (404) ou erreur API")
             return {}
         except Exception as e:
