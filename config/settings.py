@@ -52,23 +52,29 @@ try:
 except Exception as e:
     print(f"⚠️ Impossible de charger les polices : {e}")
 
-# --- CHARTE GRAPHIQUE NOXIA SECURITY ---
+# --- CHARTE GRAPHIQUE NOXIA SECURITY (Version Pro) ---
 COLORS = {
-    "bg": "#121212",
-    "card": "#1E1E1E",
-    "primary": "#007ACC",
-    "accent": "#00CC66",
-    "error": "#FF4444",
-    "text": "#FFFFFF",
-    "border": "#3d3d3d"
+    "bg": "#0d1b2e",          # Bleu nuit profond
+    "bg_darker": "#081220",   # Pour les zones très sombres
+    "card": "#1a2a3f",        # Bleu acier
+    "card_alt": "#1e3a5f",    # Variantes de cartes
+    "primary": "#2a7fc1",     # Bleu bouton
+    "primary_hover": "#1f538d",
+    "accent": "#1a9b6e",      # Émeraude Noxia
+    "accent_hover": "#22c78a",
+    "error": "#e74c3c",       # Rouge alerte
+    "text": "#ffffff",        # Blanc pur
+    "text_sub": "#a0aec0",    # Gris bleuté secondaire
+    "border": "#2d4a6b"       # Bordures discrètes
 }
 
+# On n'oublie pas les polices Montserrat que tu as déjà validées
 FONTS = {
-    "title": ("Montserrat", 16, "bold"),
+    "title": ("Montserrat", 18, "bold"),
+    "subtitle": ("Montserrat", 14, "bold"),
     "body": ("Montserrat", 12),
     "small": ("Montserrat", 11),
-    "small_bold": ("Montserrat", 11, "bold"),
-    "status": ("Montserrat", 30, "bold")
+    "status": ("Montserrat", 32, "bold")
 }
 
 # --- RÉGLAGES ASSETS ---

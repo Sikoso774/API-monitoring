@@ -28,18 +28,20 @@ class InfoSidebar(ctk.CTkScrollableFrame):
         self.label_status = ctk.CTkLabel(self, text="-", font=FONTS["status"])
         self.label_status.pack(pady=15)
         
-        # Boutons d'action
-        ctk.CTkButton(self, text="Rafraîchir Statut", fg_color=COLORS["primary"], command=on_refresh).pack(pady=10)
-        
-        # MODIFICATION 1 : On sauvegarde le bouton pour pouvoir le désactiver plus tard
-        self.btn_diag = ctk.CTkButton(self, text="LANCER DIAGNOSTIC", fg_color="#8e44ad", hover_color="#732d91", command=on_diagnostic)
-        self.btn_diag.pack(pady=(15, 5))
+       # Bouton Rafraîchir
+        self.btn_refresh = ctk.CTkButton(self, text="Rafraîchir Statut", font=FONTS["body"], fg_color=COLORS["primary"], hover_color=COLORS["primary_hover"],
+            command=on_refresh
+        )
+        self.btn_refresh.pack(pady=10, fill="x", padx=20) # fill="x" pour la responsivité locale
+
+        # Bouton Diagnostic
+        self.btn_diag = ctk.CTkButton(self, text="LANCER DIAGNOSTIC", font=FONTS["body"], fg_color=COLORS["accent"], hover_color=COLORS["accent_hover"],
+            command=on_diagnostic
+        )
+        self.btn_diag.pack(pady=(15, 5), fill="x", padx=20)
         
         # MODIFICATION 2 : Création de la barre de progression (sans faire de .pack() pour qu'elle reste cachée)
-        self.progress_bar = ctk.CTkProgressBar(
-            self, 
-            orientation="horizontal", 
-            mode="indeterminate",
+        self.progress_bar = ctk.CTkProgressBar(self, orientation="horizontal", mode="indeterminate",
             progress_color=COLORS["accent"], # Le vert néon de ta charte
             fg_color=COLORS["card"]          # Le gris de tes cartes
         )
@@ -53,7 +55,9 @@ class InfoSidebar(ctk.CTkScrollableFrame):
         
     def _create_label(self, text, bold=False, color=None, padding=(2, 2)):
         # On utilise le dictionnaire de polices ici aussi !
-        font = FONTS["small_bold"] if bold else FONTS["small"]
+        if color is None:
+            color = COLORS["text_sub"]
+        font = FONTS["subtitle"] if bold else FONTS["body"]
         lbl = ctk.CTkLabel(self.tech_frame, text=text, font=font, text_color=color, anchor="w")
         lbl.pack(fill="x", padx=10, pady=padding)
         return lbl

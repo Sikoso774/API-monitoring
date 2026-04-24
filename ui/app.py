@@ -2,7 +2,7 @@ import os
 import customtkinter as ctk
 from PIL import Image
 
-from config.settings import settings, COLORS, ASSETS_DIR, LOGO_FILENAME, LOGO_WIDTH
+from config.settings import *
 from ui.tab_list import TabListe
 from ui.tab_supervision import TabSupervision
 from services.api_client import API_Client
@@ -29,8 +29,18 @@ class App(ctk.CTk):
         # UI
         self.setup_header()
         
-        self.tabview = ctk.CTkTabview(self, segmented_button_selected_color=COLORS["primary"])
-        self.tabview.pack(padx=20, pady=10, fill="both", expand=True)
+        self.tabview = ctk.CTkTabview(self, 
+                                      fg_color=COLORS["bg"], 
+                                      segmented_button_fg_color=COLORS["card"],
+                                      segmented_button_selected_color=COLORS["primary"],
+                                      segmented_button_selected_hover_color=COLORS["primary_hover"],
+                                      segmented_button_unselected_hover_color=COLORS["card_alt"])
+        
+        # RENDRE RESPONSIVE : On demande à la tabview d'occuper tout l'espace
+        self.tabview.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        # On configure les polices des onglets
+        self.tabview._segmented_button.configure(font=FONTS["subtitle"])
         
         self.tab_liste_frame = self.tabview.add("Liste des Liens")
         self.tab_supervision_frame = self.tabview.add("Supervision")
