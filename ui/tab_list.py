@@ -1,7 +1,7 @@
 import csv
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
-from config.settings import COLORS
+from config.settings import COLORS, FONTS
 
 class TabListe:
     def __init__(self, parent_frame, api_client, on_supervise_callback):
@@ -20,10 +20,21 @@ class TabListe:
         self.search_entry.pack(side="left", padx=(0, 10))
         self.search_entry.bind("<KeyRelease>", self.filter_links)
 
-        self.btn_load = ctk.CTkButton(self.ctrl_frame, text="CHARGER API", fg_color=COLORS["primary"], command=self.load_links)
+        self.btn_load = ctk.CTkButton(self.ctrl_frame, 
+                                      text="CHARGER API", 
+                                      font=FONTS["button"], 
+                                      fg_color=COLORS["primary"], 
+                                      command=self.load_links)
+        
         self.btn_load.pack(side="left", padx=5)
 
-        self.btn_export = ctk.CTkButton(self.ctrl_frame, text="EXPORTER CSV", fg_color="#27ae60", hover_color="#1e8449", command=self.export_to_csv)
+        self.btn_export = ctk.CTkButton(self.ctrl_frame, 
+                                        text="EXPORTER CSV", 
+                                        font=FONTS["button"], 
+                                        fg_color=COLORS["secondary"], 
+                                        hover_color=COLORS["secondary_hover"], 
+                                        command=self.export_to_csv)
+        
         self.btn_export.pack(side="left", padx=5)
 
         self.scroll_frame = ctk.CTkScrollableFrame(self.parent, fg_color="transparent")
@@ -50,7 +61,7 @@ class TabListe:
             ctk.CTkLabel(card, text=f"● {status}", text_color=color).pack(side="left", padx=20)
 
             # Appel de la fonction callback injectée depuis app.py
-            ctk.CTkButton(card, text="SUPERVISER", width=100, fg_color=COLORS["primary"],
+            ctk.CTkButton(card, text="SUPERVISER", font=FONTS["button"], width=100, fg_color=COLORS["primary"],
                           command=lambda l=link: self.on_supervise(l)).pack(side="right", padx=15)
 
     def filter_links(self, event=None):

@@ -60,12 +60,17 @@ COLORS = {
     "card_alt": "#1e3a5f",    # Variantes de cartes
     "primary": "#2a7fc1",     # Bleu bouton
     "primary_hover": "#1f538d",
+    "secondary": "#27ae60",
+    "secondary_hover": "#1e8449",
     "accent": "#1a9b6e",      # Émeraude Noxia
     "accent_hover": "#22c78a",
     "error": "#e74c3c",       # Rouge alerte
     "text": "#ffffff",        # Blanc pur
     "text_sub": "#a0aec0",    # Gris bleuté secondaire
-    "border": "#2d4a6b"       # Bordures discrètes
+    "border": "#2d4a6b",      # Bordures discrètes
+    # AJOUT : Couleurs pour la scrollbar
+    "scroll_button": "#2d4a6b",
+    "scroll_hover": "#2a7fc1"
 }
 
 # On n'oublie pas les polices Montserrat que tu as déjà validées
@@ -73,6 +78,7 @@ FONTS = {
     "title": ("Montserrat", 18, "bold"),
     "subtitle": ("Montserrat", 14, "bold"),
     "body": ("Montserrat", 12),
+    "button": ("Montserrat", 13),
     "small": ("Montserrat", 11),
     "status": ("Montserrat", 32, "bold")
 }

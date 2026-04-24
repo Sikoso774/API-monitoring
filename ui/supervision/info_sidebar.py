@@ -3,7 +3,14 @@ from config.settings import COLORS, FONTS
 
 class InfoSidebar(ctk.CTkScrollableFrame):
     def __init__(self, master, on_refresh, on_diagnostic, **kwargs):
-        super().__init__(master, width=320, fg_color="transparent", **kwargs)
+        super().__init__(
+            master, 
+            width=320, 
+            fg_color="transparent",
+            scrollbar_button_color=COLORS["scroll_button"],
+            scrollbar_button_hover_color=COLORS["scroll_hover"],
+            **kwargs
+        )
         
         # En-tête Client
         self.label_client = ctk.CTkLabel(self, text="Sélectionnez un lien", font=FONTS["title"], wraplength=280)
@@ -29,13 +36,22 @@ class InfoSidebar(ctk.CTkScrollableFrame):
         self.label_status.pack(pady=15)
         
        # Bouton Rafraîchir
-        self.btn_refresh = ctk.CTkButton(self, text="Rafraîchir Statut", font=FONTS["body"], fg_color=COLORS["primary"], hover_color=COLORS["primary_hover"],
+        self.btn_refresh = ctk.CTkButton(
+            self, 
+            text="Rafraîchir Statut", 
+            font=FONTS["button"], # Utilise la nouvelle police bouton
+            fg_color=COLORS["primary"],
+            hover_color=COLORS["primary_hover"],
             command=on_refresh
         )
-        self.btn_refresh.pack(pady=10, fill="x", padx=20) # fill="x" pour la responsivité locale
+        self.btn_refresh.pack(pady=10, fill="x", padx=20)
 
-        # Bouton Diagnostic
-        self.btn_diag = ctk.CTkButton(self, text="LANCER DIAGNOSTIC", font=FONTS["body"], fg_color=COLORS["accent"], hover_color=COLORS["accent_hover"],
+        self.btn_diag = ctk.CTkButton(
+            self, 
+            text="LANCER DIAGNOSTIC", 
+            font=FONTS["button"],
+            fg_color=COLORS["accent"],
+            hover_color=COLORS["accent_hover"],
             command=on_diagnostic
         )
         self.btn_diag.pack(pady=(15, 5), fill="x", padx=20)
