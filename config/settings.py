@@ -5,7 +5,7 @@ le chargement des polices, et définit la charte graphique de l'UI.
 """
 
 import sys
-from typing import Any
+from typing import Any, Dict
 from pathlib import Path
 import keyring
 import customtkinter as ctk
