@@ -1,3 +1,10 @@
+"""Module principal de l'application Noxia Security Dashboard.
+
+Ce module contient la classe principale de l'interface graphique (App),
+qui hérite de customtkinter.CTk et gère la navigation entre les différents
+onglets (Liste des Liens, Supervision).
+"""
+
 import os
 import customtkinter as ctk
 from PIL import Image
@@ -11,7 +18,22 @@ from ui.setup_frame import SetupFrame
 from config.settings import settings, COLORS
 
 class App(ctk.CTk):
-    def __init__(self):
+
+    """Classe principale de l'application Noxia Security Dashboard.
+
+    Gère l'initialisation de la fenêtre principale, la création des onglets,
+    et l'injection des dépendances (API Client).
+
+    Attributes:
+        api (API_Client): Instance du client API pour les requêtes réseau.
+        tabview (ctk.CTkTabview): Gestionnaire des onglets de l'application.
+        tab_liste (TabListe): Onglet affichant la liste des liens.
+        tab_supervision (TabSupervision): Onglet affichant la supervision d'un lien.
+    """
+
+    def __init__(self) -> None:
+        """Initialise la fenêtre principale et configure les composants de l'interface.
+        """
         super().__init__()
         self.title("NOXIA SECURITY")
         self.geometry("1200x800")
@@ -37,12 +59,9 @@ class App(ctk.CTk):
     def init_dashboard(self) -> None:
         """Initialise le contenu du dashboard (API, Tabs, etc.)."""
         self.api = API_Client()
-        # 1. AJOUTE CES DEUX LIGNES : Création du conteneur principal
+
         self.container = ctk.CTkFrame(self, fg_color=COLORS["bg"])
         self.container.pack(fill="both", expand=True)
-
-        # 2. Ton code existant continue ici...
-        self.header = ctk.CTkFrame(self.container, fg_color="transparent")
         
         # Header
         self.header = ctk.CTkFrame(self.container, fg_color="transparent")
@@ -50,8 +69,20 @@ class App(ctk.CTk):
         self._load_logo(self.header)
 
         # Tabs
-        self.tabview = ctk.CTkTabview(self.container, fg_color=COLORS["bg"])
+        self.tabview = ctk.CTkTabview(
+            self.container, 
+            fg_color=COLORS["bg"],
+            segmented_button_fg_color=COLORS["bg"],  # Fond invisible
+            segmented_button_selected_color=COLORS["primary"],
+            segmented_button_selected_hover_color=COLORS["primary_hover"],
+            segmented_button_unselected_color=COLORS["bg"],
+            segmented_button_unselected_hover_color=COLORS["card_alt"],
+            text_color=COLORS["text"]
+        )
         self.tabview.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        # Style de la police des onglets
+        self.tabview._segmented_button.configure(font=FONTS["subtitle"])
         
         t1 = self.tabview.add("Liste des Liens")
         t2 = self.tabview.add("Supervision")

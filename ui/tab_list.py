@@ -52,7 +52,12 @@ class TabListe:
         self.ctrl_frame.pack(fill="x", padx=20, pady=10)
 
         self.search_entry = ctk.CTkEntry(
-            self.ctrl_frame, placeholder_text="Rechercher...", width=350, height=35
+            self.ctrl_frame, 
+            placeholder_text="Rechercher...", 
+            width=350, 
+            height=35,
+            fg_color=COLORS["bg"],
+            border_color=COLORS["border"]
         )
         self.search_entry.pack(side="left", padx=(0, 10))
         self.search_entry.bind("<KeyRelease>", self.filter_links)
