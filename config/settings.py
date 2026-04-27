@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     def enforce_https(cls, v: str) -> str:
         # 1. Si l'URL commence par http://, on la corrige silencieusement
         if v.startswith('http://'):
-            logger.info("🛡️ Auto-correction de l'URL HTTP vers HTTPS.")
+            print("🛡️ Auto-correction de l'URL HTTP vers HTTPS.")
             v = v.replace('http://', 'https://')
             
         # 2. Si après correction (ou si c'est une toute autre adresse) ce n'est pas sécurisé

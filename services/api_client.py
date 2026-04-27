@@ -36,8 +36,7 @@ class API_Client:
         self.session.headers.update({
             "User-Agent": "NoxiaSecurityDashboard/1.0",
             "Accept": "application/json",
-            # Si tu passes la clé API par les headers, tu peux la mettre ici une fois pour toutes :
-            "Authorization": f"Bearer {settings.API_KEY}" 
+            "api_key": settings.API_KEY
         })
         
         # 3. Timeouts stricts (Anti-DDoS / Anti-Blocage)
@@ -55,7 +54,7 @@ class API_Client:
         """
         try:
             logger.debug("Tentative de récupération de la liste des liens...")
-            response = self.session.get(f"{self.base_url}/links", headers=self.session.headers)
+            response = self.session.get(f"{self.base_url}/links")
             response.raise_for_status()
             links: List[Dict[str, Any]] = response.json()
             logger.info(f"{len(links)} liens récupérés avec succès")
@@ -75,9 +74,8 @@ class API_Client:
             logger.debug("Appel API : /monitoring")
             response = self.session.get(
                 f"{self.base_url}/monitoring", 
-                headers=self.headers, 
                 timeout=self.timeout, 
-                verity=True)
+                verify=True)
             response.raise_for_status()
             data = response.json()
             logger.info("Données de monitoring reçues")
@@ -98,7 +96,7 @@ class API_Client:
         """
         try:
             logger.debug(f"Récupération des détails pour le lien : {link_code}")
-            response = self.session.get(f"{self.base_url}/links/{link_code}", headers=self.headers)
+            response = self.session.get(f"{self.base_url}/links/{link_code}")
             response.raise_for_status()
             logger.info(f"Détails récupérés pour {link_code}")
             return response.json()
